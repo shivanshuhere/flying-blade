@@ -23,6 +23,7 @@ addEventListener("keydown", async (e) => {
       : await appWindow.setFullscreen(true);
   }
 });
+
 // load fonts
 k.loadFont("bonge", "assets/fonts/BungeeTint-Regular.ttf");
 
@@ -59,7 +60,7 @@ k.scene("main", async () => {
   const map = k.add([k.sprite("vil"), k.pos(-70, -170), k.scale(SCALE_FACTOR)]);
 
   //child of map
-  let x = 100;
+  let x = 400;
   let y = 100;
   const shuriken = map.add([
     k.sprite("shuriken"),
@@ -75,19 +76,23 @@ k.scene("main", async () => {
 
   // spining animation
   shuriken.onUpdate(() => {
-    shuriken.rotateBy(7);
-    y += 2;
+    shuriken.rotateBy(14);
     // while (true) {
-    //   if (shuriken.pos.y < 460) {
-    //     shuriken.pos.y = y;
-    //   } else {
-    //     shuriken.pos.y = 100;
-    //   }
+    if (shuriken.pos.y < 460) {
+      y += 3;
+    } else {
+      y = 100;
+      x = Math.random() * 600 + 10;
+    }
+
+    shuriken.pos.y = y;
+    shuriken.pos.x = x;
+
     // }
   });
 
   // movement
-  const SPEED = 250;
+  const SPEED = 170;
 
   const player = map.add([
     k.sprite("naruto"),
@@ -107,6 +112,19 @@ k.scene("main", async () => {
   // k.onKeyDown("space", () => {
   //   player.jump();
   // });
+
+  // back to start menu
+  k.onKeyDown("escape", () => {
+    k.go("start");
+  });
+
+  // esc menu
+  map.add([
+    k.text("Esc", {
+      size: 20,
+    }),
+    k.pos(50, 100),
+  ]);
 });
 
 k.go("main");
