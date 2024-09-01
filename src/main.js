@@ -11,8 +11,9 @@ const k = kaplay({
   scale: 2,
 });
 
-k.loadSprite("naruto", "assets/naruto.png");
+k.loadSprite("naruto", "assets/naruto-pixel.png");
 k.loadSprite("vil", "assets/konoha.jpg");
+k.loadSprite("konoha", "assets/konoha-start.jpg");
 k.loadSprite("shuriken", "assets/shuriken.png");
 
 addEventListener("keydown", async (e) => {
@@ -22,20 +23,47 @@ addEventListener("keydown", async (e) => {
       : await appWindow.setFullscreen(true);
   }
 });
+// load fonts
+k.loadFont("bonge", "assets/fonts/BungeeTint-Regular.ttf");
 
 // menu scene
 k.scene("start", async () => {
   makeBg(k);
 
   //parent
-  const map = k.add([k.sprite("vil"), k.pos(-70, -150), k.scale(SCALE_FACTOR)]);
+  const map = k.add([k.sprite("konoha"), k.pos(0, 0)]);
+
+  map.add([
+    k.text("FLYING BLADES", {
+      size: 100,
+      font: "bonge",
+    }),
+    k.pos(250, 280),
+  ]);
+
+  const subtitle = map.add([
+    k.text("Press Enter to Start!", {
+      size: 48,
+      font: "monospace",
+    }),
+    k.pos(250, 380),
+  ]);
+
+  k.onKeyDown("enter", () => {
+    k.go("main");
+  });
 });
 
+// main scene
 k.scene("main", async () => {
+  const map = k.add([k.sprite("vil"), k.pos(-70, -170), k.scale(SCALE_FACTOR)]);
+
   //child of map
+  let x = 100;
+  let y = 100;
   const shuriken = map.add([
     k.sprite("shuriken"),
-    k.pos(400, 180),
+    k.pos(x, y),
     // k.pos(k.center()),
     k.scale(0.05),
     {
@@ -47,7 +75,15 @@ k.scene("main", async () => {
 
   // spining animation
   shuriken.onUpdate(() => {
-    shuriken.rotateBy(5);
+    shuriken.rotateBy(7);
+    y += 2;
+    // while (true) {
+    //   if (shuriken.pos.y < 460) {
+    //     shuriken.pos.y = y;
+    //   } else {
+    //     shuriken.pos.y = 100;
+    //   }
+    // }
   });
 
   // movement
@@ -55,8 +91,8 @@ k.scene("main", async () => {
 
   const player = map.add([
     k.sprite("naruto"),
-    k.pos(10, 333),
-    k.scale(0.19),
+    k.pos(70, 340),
+    k.scale(0.1),
     // k.body(),
   ]);
   k.onKeyDown("left", () => {
@@ -73,4 +109,4 @@ k.scene("main", async () => {
   // });
 });
 
-k.go("start");
+k.go("main");
