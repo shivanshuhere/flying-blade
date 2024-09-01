@@ -68,16 +68,16 @@ k.scene("main", async () => {
     // k.pos(k.center()),
     k.scale(0.05),
     {
-      speed: 7,
+      speed: 100,
     },
-    k.rotate(0),
+    k.rotate(),
+    k.area(),
     k.anchor("center"),
   ]);
 
   // spining animation
   shuriken.onUpdate(() => {
     shuriken.rotateBy(14);
-    // while (true) {
     if (shuriken.pos.y < 460) {
       y += 3;
     } else {
@@ -87,8 +87,6 @@ k.scene("main", async () => {
 
     shuriken.pos.y = y;
     shuriken.pos.x = x;
-
-    // }
   });
 
   // movement
@@ -99,6 +97,7 @@ k.scene("main", async () => {
     k.pos(70, 340),
     k.scale(0.1),
     // k.body(),
+    k.area(),
   ]);
   k.onKeyDown("left", () => {
     player.move(-SPEED, 0);
@@ -106,6 +105,11 @@ k.scene("main", async () => {
 
   k.onKeyDown("right", () => {
     player.move(SPEED, 0);
+  });
+
+  player.onCollide("shuriken", () => {
+    k.destroy(player);
+    k.go("start");
   });
 
   k.setGravity(1500);
@@ -121,7 +125,10 @@ k.scene("main", async () => {
   // esc menu
   map.add([
     k.text("Esc", {
-      size: 20,
+      transform: {
+        color: "black",
+      },
+      size: 24,
     }),
     k.pos(50, 100),
   ]);
